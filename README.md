@@ -1,2 +1,2 @@
-# system-stats-daemon
-Проектная работа по курсу ОТУС "Golang Developer. Professional". Тема: "Системный мониторинг"
+# Проектная работа по курсу ОТУС "Golang Developer. Professional". Тема: "Системный мониторинг"
+
