@@ -1,0 +1,95 @@
+syntax = "proto3";
+
+package stats;
+
+option go_package = "github.com/kodmandvl/system-stats-daemon/internal/grpc/pb";
+
+// SystemStatsService — gRPC-сервис с однонаправленным потоком (server streaming).
+service SystemStatsService {
+  // ObserveSystemStats: клиент передаёт N (send_period) и M (calc_period),
+  // сервер периодически отправляет снапшоты, усреднённые за последние M секунд.
+  rpc ObserveSystemStats(SystemStatsRequest) returns (stream SystemStats) {}
+}
+
+// SystemStatsRequest — параметры потока статистики.
+message SystemStatsRequest {
+  uint32 send_period = 1; // N — интервал отправки снапшотов (сек)
+  uint32 calc_period = 2; // M — окно усреднения (сек)
+}
+
+// SystemStats — полный снапшот системы.
+message SystemStats {
+  LoadAvgStats load_avg = 1;
+  CPUStats cpu = 2;
+  DisksLoadStats disks_load = 3;
+  FilesystemsStats filesystems = 4;
+  NetworkStats network = 5;
+}
+
+message LoadAvgStats {
+  double load_avg1 = 1;
+  double load_avg5 = 2;
+  double load_avg15 = 3;
+}
+
+message CPUStats {
+  double user_mode = 1;
+  double system_mode = 2;
+  double idle = 3;
+}
+
+message DisksLoadStats {
+  repeated DiskLoad disks = 1;
+}
+
+message DiskLoad {
+  string device = 1;
+  double tps = 2;
+  double kbs = 3;
+}
+
+message FilesystemsStats {
+  repeated FilesystemStats filesystems = 1;
+}
+
+message FilesystemStats {
+  string filesystem = 1;
+  string mounted_on = 2;
+  double used_mb = 3;
+  double used_percent = 4;
+  double used_inodes = 5;
+  double used_inodes_percent = 6;
+}
+
+message NetworkStats {
+  repeated ProtocolTalker protocol_talkers = 1;
+  repeated FlowTalker flow_talkers = 2;
+  repeated ListeningSocket listening_sockets = 3;
+  repeated TCPStateCount tcp_states = 4;
+}
+
+message ProtocolTalker {
+  string protocol = 1;
+  uint64 bytes = 2;
+  double percent = 3;
+}
+
+message FlowTalker {
+  string source = 1;
+  string destination = 2;
+  string protocol = 3;
+  double bps = 4;
+}
+
+message ListeningSocket {
+  string command = 1;
+  int32 pid = 2;
+  string user = 3;
+  string protocol = 4;
+  uint32 port = 5;
+}
+
+message TCPStateCount {
+  string state = 1;
+  uint32 count = 2;
+}

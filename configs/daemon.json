@@ -1,0 +1,11 @@
+{
+  "collectIntervalSec": 1,
+  "collectTimeoutSec": 5,
+  "metrics": {
+    "loadAvg": true,
+    "cpu": true,
+    "disksLoad": true,
+    "filesystem": true,
+    "network": true
+  }
+}
