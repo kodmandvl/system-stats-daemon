@@ -1,0 +1,6 @@
+{
+  "address": "localhost:8080",
+  "sendPeriod": 5,
+  "calcPeriod": 15,
+  "section": "network"
+}
